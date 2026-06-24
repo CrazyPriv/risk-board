@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Риск-борд — IT-Проекты B2B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface2: #f0f2f5;
+  --border: #dde1e8;
+  --border2: #e8eaed;
+  --text: #1a202c;
+  --text2: #4a5568;
+  --text3: #9aa5b4;
+  --accent: #2563eb;
+  --accent2: #1d4ed8;
+  --green: #16a34a;
+  --green-bg: rgba(22,163,74,0.10);
+  --yellow: #d97706;
+  --yellow-bg: rgba(217,119,6,0.10);
+  --red: #dc2626;
+  --red-bg: rgba(220,38,38,0.10);
+  --blue: #2563eb;
+  --blue-bg: rgba(37,99,235,0.08);
+  --purple: #7c3aed;
+  --orange: #ea580c;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.5; min-height: 100vh; }
+
+/* ─── SHELL ─── */
+.shell { display: flex; height: 100vh; overflow: hidden; }
+.sidebar { width: 200px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border2); display: flex; flex-direction: column; padding: 0; }
+.sidebar-logo { padding: 16px; border-bottom: 1px solid var(--border2); display: flex; align-items: center; gap: 8px; }
+.sidebar-logo svg { color: var(--accent); }
+.sidebar-logo span { font-weight: 700; font-size: 14px; color: var(--text); }
+.sidebar-logo small { font-size: 10px; color: var(--text3); display: block; }
+.sidebar-section { padding: 8px 0; border-bottom: 1px solid var(--border2); }
+.sidebar-label { padding: 6px 16px; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; color: var(--text2); cursor: pointer; transition: all 0.15s; font-size: 12.5px; }
+.nav-item:hover { background: rgba(0,0,0,0.04); color: var(--text); }
+.nav-item.active { background: rgba(37,99,235,0.10); color: var(--accent); border-right: 2px solid var(--accent); }
+.nav-item svg { flex-shrink: 0; width: 15px; height: 15px; }
+.nav-badge { margin-left: auto; background: var(--red); color: #fff; border-radius: 10px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+.nav-badge.yellow { background: var(--yellow); color: #000; }
+.nav-badge.blue { background: var(--accent); }
+
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ─── TOP BAR ─── */
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border2); padding: 0 20px; display: flex; align-items: center; gap: 0; height: 44px; flex-shrink: 0; }
+.topbar-title { font-weight: 600; font-size: 13.5px; margin-right: 20px; color: var(--text); }
+.tab { padding: 0 14px; height: 44px; display: flex; align-items: center; gap: 6px; color: var(--text2); cursor: pointer; font-size: 12.5px; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--blue); border-bottom-color: var(--accent); }
+.tab .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+.tab .dot.yellow { background: var(--yellow); }
+.tab .dot.green { background: var(--green); }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.role-selector { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 4px 10px; font-size: 12px; cursor: pointer; }
+
+/* ─── CONTENT AREA ─── */
+.content-area { flex: 1; overflow-y: auto; padding: 16px 20px; }
+
+/* ─── KPI ROW ─── */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+.kpi-card { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); padding: 12px 14px; }
+.kpi-card .kpi-label { font-size: 11px; color: var(--text3); margin-bottom: 6px; font-weight: 500; }
+.kpi-card .kpi-val { font-size: 22px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.kpi-card .kpi-sub { font-size: 10.5px; color: var(--text3); }
+.kpi-card.red { border-top: 2px solid var(--red); } .kpi-card.red .kpi-val { color: var(--red); }
+.kpi-card.yellow { border-top: 2px solid var(--yellow); } .kpi-card.yellow .kpi-val { color: var(--yellow); }
+.kpi-card.green { border-top: 2px solid var(--green); } .kpi-card.green .kpi-val { color: var(--green); }
+.kpi-card.blue { border-top: 2px solid var(--blue); } .kpi-card.blue .kpi-val { color: var(--blue); }
+.kpi-card.neutral .kpi-val { color: var(--text); }
+
+/* ─── GRID LAYOUT ─── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.card { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); }
+.card-header { padding: 11px 14px; border-bottom: 1px solid var(--border2); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 12.5px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.card-title svg { color: var(--text2); width: 14px; height: 14px; }
+.card-action { font-size: 11px; color: var(--accent); cursor: pointer; }
+.card-body { padding: 12px 14px; }
+
+/* ─── TABLE ─── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead th { padding: 7px 10px; text-align: left; color: var(--text3); font-weight: 500; font-size: 11px; border-bottom: 1px solid var(--border2); white-space: nowrap; }
+tbody td { padding: 8px 10px; border-bottom: 1px solid var(--border2); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(255,255,255,0.025); }
+.project-link { color: var(--blue); font-weight: 500; text-decoration: none; cursor: pointer; }
+.project-link:hover { text-decoration: underline; }
+
+/* ─── BADGES ─── */
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge.red { background: var(--red-bg); color: #fc8181; }
+.badge.yellow { background: var(--yellow-bg); color: #fbbf24; }
+.badge.green { background: var(--green-bg); color: #4ade80; }
+.badge.blue { background: var(--blue-bg); color: var(--blue); }
+.badge.gray { background: rgba(255,255,255,0.07); color: var(--text2); }
+.badge.purple { background: rgba(167,139,250,0.12); color: var(--purple); }
+.badge.orange { background: rgba(251,146,60,0.12); color: var(--orange); }
+.badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* ─── BLOCKERS LIST ─── */
+.blocker-item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border2); }
+.blocker-item:last-child { border-bottom: none; padding-bottom: 0; }
+.blocker-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; font-weight: 700; margin-top: 1px; }
+.blocker-icon.red { background: var(--red-bg); color: var(--red); }
+.blocker-icon.yellow { background: var(--yellow-bg); color: var(--yellow); }
+.blocker-meta { flex: 1; min-width: 0; }
+.blocker-name { font-size: 12.5px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.blocker-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.blocker-days { font-size: 12px; font-weight: 700; flex-shrink: 0; text-align: right; }
+.blocker-days.red { color: var(--red); }
+.blocker-days.yellow { color: var(--yellow); }
+
+/* ─── HEATMAP ─── */
+.heatmap { display: grid; gap: 3px; }
+.hm-row { display: flex; align-items: center; gap: 3px; }
+.hm-label { width: 140px; flex-shrink: 0; font-size: 11px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hm-cell { flex: 1; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; cursor: default; transition: opacity 0.15s; }
+.hm-cell:hover { opacity: 0.8; }
+.hm-cell.empty { background: rgba(255,255,255,0.05); color: var(--text3); }
+.hm-cell.low { background: rgba(34,197,94,0.2); color: #4ade80; }
+.hm-cell.mid { background: rgba(245,158,11,0.25); color: #fbbf24; }
+.hm-cell.high { background: rgba(239,68,68,0.3); color: #fc8181; }
+.hm-header { display: flex; gap: 3px; margin-bottom: 4px; padding-left: 143px; }
+.hm-header span { flex: 1; font-size: 10px; color: var(--text3); text-align: center; }
+
+/* ─── DELTA CHART ─── */
+.delta-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+.delta-label { width: 130px; flex-shrink: 0; font-size: 11.5px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.delta-track { flex: 1; height: 18px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; position: relative; }
+.delta-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 6px; font-size: 10px; font-weight: 700; white-space: nowrap; transition: width 0.6s ease; }
+.delta-bar.red { background: rgba(239,68,68,0.35); color: var(--red); }
+.delta-bar.yellow { background: rgba(245,158,11,0.3); color: var(--yellow); }
+.delta-bar.green { background: rgba(34,197,94,0.2); color: var(--green); }
+.delta-val { width: 40px; flex-shrink: 0; font-size: 11px; font-weight: 600; text-align: right; }
+.delta-val.red { color: var(--red); }
+.delta-val.yellow { color: var(--yellow); }
+.delta-val.green { color: var(--green); }
+
+/* ─── RISK MATRIX ─── */
+.risk-matrix { display: grid; grid-template-columns: 28px 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr 24px; gap: 3px; height: 180px; }
+.rm-cell { border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; position: relative; }
+.rm-cell:hover { opacity: 0.85; }
+.rm-cell.ll { background: rgba(34,197,94,0.2); color: #4ade80; }
+.rm-cell.lm { background: rgba(34,197,94,0.15); color: #4ade80; }
+.rm-cell.lh { background: rgba(245,158,11,0.2); color: #fbbf24; }
+.rm-cell.ml { background: rgba(34,197,94,0.15); color: #4ade80; }
+.rm-cell.mm { background: rgba(245,158,11,0.25); color: #fbbf24; }
+.rm-cell.mh { background: rgba(239,68,68,0.25); color: #fc8181; }
+.rm-cell.hl { background: rgba(245,158,11,0.2); color: #fbbf24; }
+.rm-cell.hm { background: rgba(239,68,68,0.28); color: #fc8181; }
+.rm-cell.hh { background: rgba(239,68,68,0.4); color: var(--red); }
+.rm-axis { display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text3); }
+.rm-axis.vert { writing-mode: vertical-rl; transform: rotate(180deg); }
+
+/* ─── MISC ─── */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.section-title { font-size: 12.5px; font-weight: 600; color: var(--text2); }
+.progress-mini { height: 4px; background: rgba(0,0,0,0.06); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+.progress-mini-fill { height: 100%; border-radius: 99px; }
+.tag { display: inline-flex; padding: 1px 6px; border-radius: 4px; font-size: 10.5px; background: rgba(255,255,255,0.07); color: var(--text2); }
+
+/* ─── VIEW PANELS ─── */
+.view-panel { display: none; }
+.view-panel.active { display: block; }
+
+/* ─── ROLE BADGE ─── */
+.role-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; margin-left: 12px; }
+.role-badge.pm { background: rgba(96,165,250,0.15); color: var(--blue); }
+.role-badge.lead { background: rgba(167,139,250,0.15); color: var(--purple); }
+.role-badge.tl { background: rgba(34,197,94,0.15); color: var(--green); }
+.role-badge.cto { background: rgba(251,146,60,0.15); color: var(--orange); }
+
+.legend-row { display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* Scroll */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.empty-note { padding: 24px; text-align: center; color: var(--text3); font-size: 12px; }
+.wip-pct { font-size: 11px; color: var(--text3); }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <div><span>Proteus</span><small>IT-проекты B2B</small></div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Навигация</div>
+    <div class="nav-item active" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Риск-борд
+    </div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Обзор проектов
+    </div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Задачи команд
+    </div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Сводная участия
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Сигналы</div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Просроченные
+      <span class="nav-badge">16</span>
+    </div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Блокеры активны
+      <span class="nav-badge yellow">7</span>
+    </div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Риск срыва
+      <span class="nav-badge">4</span>
+    </div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Отчёты</div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Загруз команд
+    </div>
+    <div class="nav-item" onclick="setNavActive(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Roadmap
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <span class="topbar-title">⚠️ Риск-борд</span>
+    <div class="tab active" onclick="setTabActive(this,'home')">Главная</div>
+    <div class="tab" onclick="setTabActive(this,'all')"><span class="dot green"></span>Все проекты</div>
+    <div class="tab" onclick="setTabActive(this,'overdue')"><span class="dot"></span>Просроченные</div>
+    <div class="tab" onclick="setTabActive(this,'blockers')"><span class="dot yellow"></span>Блокеры активны</div>
+    <div class="tab" onclick="setTabActive(this,'risk')"><span class="dot"></span>Риск срыва</div>
+    <div class="topbar-right">
+      <span style="font-size:11px;color:var(--text3);">Роль:</span>
+      <select class="role-selector" onchange="setRole(this.value)">
+        <option value="pm">👤 Менеджер проекта</option>
+        <option value="lead">📋 Лид проектного офиса</option>
+        <option value="tl">🛠️ Тимлид / Групплид</option>
+        <option value="cto">📊 СТО / Ответственный</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <!-- ══════════ HOME VIEW ══════════ -->
+    <div class="view-panel active" id="panel-home">
+      <div id="home-pm">
+        <div style="display:flex;align-items:center;margin-bottom:14px;">
+          <div style="font-size:16px;font-weight:700;">Добрый день, Александра <span style="font-size:14px;color:var(--text3);">· 23 июня 2026</span></div>
+          <span class="role-badge pm">👤 Менеджер проекта</span>
+        </div>
+        <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--blue);">
+          📌 Вы видите только проекты, где вы назначены Менеджером проекта (RLS)
+        </div>
+        <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);">
+          <div class="kpi-card blue"><div class="kpi-label">Моих проектов</div><div class="kpi-val">5</div><div class="kpi-sub">In Progress</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Просрочено</div><div class="kpi-val">2</div><div class="kpi-sub">Due date прошёл</div></div>
+          <div class="kpi-card yellow"><div class="kpi-label">Активных блокеров</div><div class="kpi-val">3</div><div class="kpi-sub">is blocked by</div></div>
+          <div class="kpi-card green"><div class="kpi-label">ИВК в срок</div><div class="kpi-val">74%</div><div class="kpi-sub">Target ≤ Planned</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Мои проекты — сигналы</span></div>
+            <div class="card-body">
+              <table><thead><tr><th>Проект</th><th>Due Date</th><th>Блокеры</th><th>% в срок</th><th>Статус</th></tr></thead>
+              <tbody>
+                <tr><td><span class="project-link">SMEITSTRAT-74 Zoya тесты</span></td><td style="color:var(--red)">2026-05-31 <span class="badge red">−23д</span></td><td><span class="badge red">2</span></td><td>61%</td><td><span class="badge red">Просрочен</span></td></tr>
+                <tr><td><span class="project-link">SMEITSTRAT-65 Трейсинг</span></td><td style="color:var(--yellow)">2026-06-30</td><td><span class="badge yellow">1</span></td><td>80%</td><td><span class="badge yellow">Риск</span></td></tr>
+                <tr><td><span class="project-link">SMEITSTRAT-58 Прометей</span></td><td>2027-06-30</td><td><span class="badge gray">0</span></td><td>88%</td><td><span class="badge green">В норме</span></td></tr>
+                <tr><td><span class="project-link">SMEITSTRAT-57 Spring Boot</span></td><td>2026-03-01 <span class="badge red">−114д</span></td><td><span class="badge gray">0</span></td><td>42%</td><td><span class="badge red">Просрочен</span></td></tr>
+                <tr><td><span class="project-link">SMEITSTRAT-81 Angular 20+</span></td><td>2026-06-30</td><td><span class="badge gray">0</span></td><td>91%</td><td><span class="badge green">В норме</span></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">⛔ Активные блокеры по моим проектам</span></div>
+            <div class="card-body">
+              <div class="blocker-item">
+                <div class="blocker-icon red">🔒</div>
+                <div class="blocker-meta">
+                  <div class="blocker-name">SCU-756 Заезд в Interscape</div>
+                  <div class="blocker-sub">SMEITSTRAT-33 · is blocked by B2B-крит зависимость</div>
+                </div>
+                <div class="blocker-days red">21 дн.</div>
+              </div>
+              <div class="blocker-item">
+                <div class="blocker-icon red">🔒</div>
+                <div class="blocker-meta">
+                  <div class="blocker-name">CL-1017 Spring-tracing адаптер</div>
+                  <div class="blocker-sub">SMEITSTRAT-65 · is blocked by инфра команда</div>
+                </div>
+                <div class="blocker-days red">14 дн.</div>
+              </div>
+              <div class="blocker-item">
+                <div class="blocker-icon yellow">⚠️</div>
+                <div class="blocker-meta">
+                  <div class="blocker-name">SCU-785 Интеграционные тесты</div>
+                  <div class="blocker-sub">SMEITSTRAT-74 · is blocked by Zoya-зависимость</div>
+                </div>
+                <div class="blocker-days yellow">6 дн.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="home-lead" style="display:none">
+        <div style="display:flex;align-items:center;margin-bottom:14px;">
+          <div style="font-size:16px;font-weight:700;">Добрый день, Александра <span style="font-size:14px;color:var(--text3);">· 23 июня 2026</span></div>
+          <span class="role-badge lead">📋 Лид проектного офиса</span>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-card blue"><div class="kpi-label">Активных проектов</div><div class="kpi-val">38</div><div class="kpi-sub">In Progress</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Просрочено</div><div class="kpi-val">16</div><div class="kpi-sub">42,1% портфеля</div></div>
+          <div class="kpi-card yellow"><div class="kpi-label">Блокеров активно</div><div class="kpi-val">7</div><div class="kpi-sub">кросс-командные</div></div>
+          <div class="kpi-card green"><div class="kpi-label">% ИВК в срок</div><div class="kpi-val">74%</div><div class="kpi-sub">Target ≤ Planned</div></div>
+          <div class="kpi-card neutral"><div class="kpi-label">WIP Rate портфель</div><div class="kpi-val">15,8%</div><div class="kpi-sub">1 061 Done / 1 429</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Отклонение план/факт — топ проектов</span><span class="card-action">Все →</span></div>
+            <div class="card-body">
+              <div class="delta-row"><span class="delta-label">SMEIT-57 Spring Boot</span><div class="delta-track"><div class="delta-bar red" style="width:90%">−114 дн.</div></div><span class="delta-val red">−114д</span></div>
+              <div class="delta-row"><span class="delta-label">SMEIT-50 Cats-Effect/ZIO</span><div class="delta-track"><div class="delta-bar red" style="width:75%">−50 дн.</div></div><span class="delta-val red">−50д</span></div>
+              <div class="delta-row"><span class="delta-label">SMEIT-33 Interscape</span><div class="delta-track"><div class="delta-bar yellow" style="width:55%">−28 дн.</div></div><span class="delta-val yellow">−28д</span></div>
+              <div class="delta-row"><span class="delta-label">SMEIT-95 common-rxstore</span><div class="delta-track"><div class="delta-bar yellow" style="width:42%">−23 дн.</div></div><span class="delta-val yellow">−23д</span></div>
+              <div class="delta-row"><span class="delta-label">SMEIT-74 Zoya тесты</span><div class="delta-track"><div class="delta-bar yellow" style="width:38%">−23 дн.</div></div><span class="delta-val yellow">−23д</span></div>
+              <div class="delta-row"><span class="delta-label">SMEIT-65 Трейсинг</span><div class="delta-track"><div class="delta-bar green" style="width:15%">+7 дн.</div></div><span class="delta-val green">+7д</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Загруз отделов (WIP%)</span></div>
+            <div class="card-body">
+              <div class="hm-header"><span>Янв</span><span>Фев</span><span>Мар</span><span>Апр</span><span>Май</span><span>Июн</span></div>
+              <div class="heatmap">
+                <div class="hm-row"><span class="hm-label">Отд. фин. продуктов</span><div class="hm-cell mid">38%</div><div class="hm-cell mid">42%</div><div class="hm-cell high">54%</div><div class="hm-cell high">51%</div><div class="hm-cell mid">47%</div><div class="hm-cell mid">44%</div></div>
+                <div class="hm-row"><span class="hm-label">Отд. кред. продуктов</span><div class="hm-cell high">58%</div><div class="hm-cell high">62%</div><div class="hm-cell high">59%</div><div class="hm-cell mid">48%</div><div class="hm-cell mid">41%</div><div class="hm-cell mid">40%</div></div>
+                <div class="hm-row"><span class="hm-label">Отд. платф. интерф.</span><div class="hm-cell low">22%</div><div class="hm-cell mid">31%</div><div class="hm-cell mid">35%</div><div class="hm-cell mid">33%</div><div class="hm-cell low">28%</div><div class="hm-cell low">25%</div></div>
+                <div class="hm-row"><span class="hm-label">Отд. бухг. систем</span><div class="hm-cell low">18%</div><div class="hm-cell low">20%</div><div class="hm-cell low">24%</div><div class="hm-cell mid">30%</div><div class="hm-cell low">27%</div><div class="hm-cell low">21%</div></div>
+                <div class="hm-row"><span class="hm-label">Отд. отраслевых пр.</span><div class="hm-cell mid">34%</div><div class="hm-cell mid">38%</div><div class="hm-cell high">55%</div><div class="hm-cell high">52%</div><div class="hm-cell mid">43%</div><div class="hm-cell mid">39%</div></div>
+              </div>
+              <div class="legend-row" style="margin-top:8px;">
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(34,197,94,0.5)"></div>&lt;30% норма</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.6)"></div>30-50% внимание</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(239,68,68,0.6)"></div>&gt;50% перегруз</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="home-tl" style="display:none">
+        <div style="display:flex;align-items:center;margin-bottom:14px;">
+          <div style="font-size:16px;font-weight:700;">Добрый день <span style="font-size:14px;color:var(--text3);">· 23 июня 2026</span></div>
+          <span class="role-badge tl">🛠️ Тимлид / Групплид</span>
+        </div>
+        <div style="background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--green);">
+          📌 Видите проекты, в которых участвуют ваши команды (RLS по отделу)
+        </div>
+        <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);">
+          <div class="kpi-card blue"><div class="kpi-label">Проектов команд</div><div class="kpi-val">12</div><div class="kpi-sub">Отдел фин. продуктов</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Потенц. отстают</div><div class="kpi-val">4</div><div class="kpi-sub">delta &gt; 14 дн.</div></div>
+          <div class="kpi-card yellow"><div class="kpi-label">WIP на команды</div><div class="kpi-val">44%</div><div class="kpi-sub">этот месяц</div></div>
+          <div class="kpi-card green"><div class="kpi-label">Завершено ИВК</div><div class="kpi-val">21</div><div class="kpi-sub">из 26 в проектах</div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Проекты моих команд — риски</span></div>
+            <div class="card-body">
+              <table><thead><tr><th>Проект</th><th>Команда</th><th>Отставание</th><th>WIP%</th><th>Статус</th></tr></thead>
+              <tbody>
+                <tr><td><span class="project-link">SMEIT-97 iOS отказ</span></td><td>PKO Card</td><td style="color:var(--red)">−7д</td><td>100%</td><td><span class="badge red">Риск</span></td></tr>
+                <tr><td><span class="project-link">SMEIT-116 AdopShot</span></td><td>PKO Card</td><td>0д</td><td>100%</td><td><span class="badge yellow">WIP</span></td></tr>
+                <tr><td><span class="project-link">SMEIT-74 Zoya тесты</span></td><td>Kredline</td><td style="color:var(--yellow)">−23д</td><td>89%</td><td><span class="badge yellow">Риск</span></td></tr>
+                <tr><td><span class="project-link">SMEIT-62 Liquibase</span></td><td>Java Line</td><td>0д</td><td>32%</td><td><span class="badge green">В норме</span></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Загруз моих команд (WIP%)</span></div>
+            <div class="card-body">
+              <div class="hm-header"><span>Янв</span><span>Фев</span><span>Мар</span><span>Апр</span><span>Май</span><span>Июн</span></div>
+              <div class="heatmap">
+                <div class="hm-row"><span class="hm-label">PKO Card</span><div class="hm-cell high">62%</div><div class="hm-cell high">58%</div><div class="hm-cell high">65%</div><div class="hm-cell high">70%</div><div class="hm-cell high">66%</div><div class="hm-cell high">58%</div></div>
+                <div class="hm-row"><span class="hm-label">PKO OperFeed</span><div class="hm-cell mid">41%</div><div class="hm-cell mid">45%</div><div class="hm-cell mid">43%</div><div class="hm-cell mid">38%</div><div class="hm-cell low">29%</div><div class="hm-cell mid">33%</div></div>
+                <div class="hm-row"><span class="hm-label">Java Line</span><div class="hm-cell low">25%</div><div class="hm-cell low">22%</div><div class="hm-cell low">28%</div><div class="hm-cell mid">35%</div><div class="hm-cell low">27%</div><div class="hm-cell low">24%</div></div>
+                <div class="hm-row"><span class="hm-label">Outgoing Currency</span><div class="hm-cell mid">48%</div><div class="hm-cell mid">42%</div><div class="hm-cell high">52%</div><div class="hm-cell mid">44%</div><div class="hm-cell mid">40%</div><div class="hm-cell mid">36%</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="home-cto" style="display:none">
+        <div style="display:flex;align-items:center;margin-bottom:14px;">
+          <div style="font-size:16px;font-weight:700;">Портфель IT-проектов B2B <span style="font-size:14px;color:var(--text3);">· 23 июня 2026</span></div>
+          <span class="role-badge cto">📊 СТО / Ответственный</span>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-card blue"><div class="kpi-label">Всего в работе</div><div class="kpi-val">38</div><div class="kpi-sub">In Progress</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Просрочено</div><div class="kpi-val">16</div><div class="kpi-sub">42,1% портфеля 🔴</div></div>
+          <div class="kpi-card yellow"><div class="kpi-label">Активных блокеров</div><div class="kpi-val">7</div><div class="kpi-sub">кросс-командные</div></div>
+          <div class="kpi-card neutral"><div class="kpi-label">WIP Rate портфель</div><div class="kpi-val">15,8%</div><div class="kpi-sub">1 429 задач всего</div></div>
+          <div class="kpi-card red"><div class="kpi-label">Перегруженных отд.</div><div class="kpi-val">2</div><div class="kpi-sub">&gt;50% WIP этот месяц</div></div>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Тепловая карта портфеля</span></div>
+            <div class="card-body">
+              <div class="hm-header"><span>Янв</span><span>Фев</span><span>Мар</span><span>Апр</span><span>Май</span><span>Июн</span></div>
+              <div class="heatmap">
+                <div class="hm-row"><span class="hm-label">Фин. продукты</span><div class="hm-cell mid">38%</div><div class="hm-cell mid">42%</div><div class="hm-cell high">54%</div><div class="hm-cell high">51%</div><div class="hm-cell mid">47%</div><div class="hm-cell mid">44%</div></div>
+                <div class="hm-row"><span class="hm-label">Кред. продукты</span><div class="hm-cell high">58%</div><div class="hm-cell high">62%</div><div class="hm-cell high">59%</div><div class="hm-cell mid">48%</div><div class="hm-cell mid">41%</div><div class="hm-cell mid">40%</div></div>
+                <div class="hm-row"><span class="hm-label">Платф. интерф.</span><div class="hm-cell low">22%</div><div class="hm-cell mid">31%</div><div class="hm-cell mid">35%</div><div class="hm-cell mid">33%</div><div class="hm-cell low">28%</div><div class="hm-cell low">25%</div></div>
+                <div class="hm-row"><span class="hm-label">Бухг. системы</span><div class="hm-cell low">18%</div><div class="hm-cell low">20%</div><div class="hm-cell low">24%</div><div class="hm-cell mid">30%</div><div class="hm-cell low">27%</div><div class="hm-cell low">21%</div></div>
+                <div class="hm-row"><span class="hm-label">Отраслевые пр.</span><div class="hm-cell mid">34%</div><div class="hm-cell mid">38%</div><div class="hm-cell high">55%</div><div class="hm-cell high">52%</div><div class="hm-cell mid">43%</div><div class="hm-cell mid">39%</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Статус портфеля</span></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--red-bg);border-radius:6px;">
+                <span style="font-size:12px;font-weight:600;color:var(--red);">🔴 Просрочены</span><span style="font-size:18px;font-weight:700;color:var(--red);">16</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--yellow-bg);border-radius:6px;">
+                <span style="font-size:12px;font-weight:600;color:var(--yellow);">🟡 В ближ. 3 мес.</span><span style="font-size:18px;font-weight:700;color:var(--yellow);">11</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--blue-bg);border-radius:6px;">
+                <span style="font-size:12px;font-weight:600;color:var(--blue);">🔵 В работе норм.</span><span style="font-size:18px;font-weight:700;color:var(--blue);">11</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">WIP Rate — тренд</span></div>
+            <div class="card-body">
+              <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Доля ИВК в работе vs завершено</div>
+              <div class="delta-row"><span class="delta-label">Принятие лимита</span><div class="delta-track"><div class="delta-bar red" style="width:63%">62,9%</div></div><span class="delta-val red">63%</span></div>
+              <div class="delta-row"><span class="delta-label">PKO OperFeed</span><div class="delta-track"><div class="delta-bar yellow" style="width:59%">58,8%</div></div><span class="delta-val yellow">59%</span></div>
+              <div class="delta-row"><span class="delta-label">Currency Contr.</span><div class="delta-track"><div class="delta-bar yellow" style="width:50%">50,0%</div></div><span class="delta-val yellow">50%</span></div>
+              <div class="delta-row"><span class="delta-label">PKO Card</span><div class="delta-track"><div class="delta-bar yellow" style="width:48%">48,3%</div></div><span class="delta-val yellow">48%</span></div>
+              <div class="delta-row"><span class="delta-label">Outgoing Curr.</span><div class="delta-track"><div class="delta-bar green" style="width:16%">15,8%</div></div><span class="delta-val green">16%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end home -->
+
+    <!-- ══════════ ALL PROJECTS VIEW ══════════ -->
+    <div class="view-panel" id="panel-all">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="font-size:15px;font-weight:700;">Все проекты портфеля</div>
+        <span id="all-role-badge" class="role-badge pm">👤 Менеджер проекта</span>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <input style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text);font-size:12px;outline:none;" placeholder="🔍 Поиск проекта...">
+          <select style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text);font-size:12px;">
+            <option>Все статусы</option><option>In Progress</option><option>Done</option>
+          </select>
+        </div>
+      </div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+        <div class="kpi-card blue"><div class="kpi-label">Всего проектов</div><div class="kpi-val">38</div><div class="kpi-sub">In Progress</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Завершено ИВК</div><div class="kpi-val">1 061</div><div class="kpi-sub">из 1 429</div></div>
+        <div class="kpi-card neutral"><div class="kpi-label">Ключевых</div><div class="kpi-val">7</div><div class="kpi-sub">18,4% портфеля</div></div>
+        <div class="kpi-card neutral"><div class="kpi-label">Run-проектов</div><div class="kpi-val">11</div><div class="kpi-sub">28,9% портфеля</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Таблица проектов</span><span class="card-action">Экспорт</span></div>
+        <div class="card-body table-wrap">
+          <table><thead><tr><th>Проект</th><th>Тип</th><th>Дедлайн</th><th>Статус дедл.</th><th>Завершено ИВК</th><th>В работе</th><th>Работа, дн.</th><th>WIP%</th><th>Риск</th></tr></thead>
+          <tbody>
+            <tr><td><span class="project-link">SMEIT-97 iOS Line. Отказ SMEUIKit</span></td><td><span class="tag">Run</span></td><td>2026-05-31</td><td><span class="badge red">Просрочен</span></td><td>3/5</td><td>2</td><td>53</td><td>—</td><td><span class="badge red">⚠ Блокер</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-96 Android Line. Отказ RX2</span></td><td><span class="tag">Run</span></td><td>—</td><td><span class="badge gray">В работе</span></td><td>0/2</td><td>4</td><td>23</td><td>—</td><td><span class="badge green">Норма</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-95 Android Line. Отказ common-rxstore</span></td><td><span class="tag">Run</span></td><td>2026-03-01</td><td><span class="badge red">Просрочен</span></td><td>3/4</td><td>8</td><td>64</td><td>—</td><td><span class="badge red">Просрочен</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-94 Android Line. Отказ Gson</span></td><td><span class="tag">Run</span></td><td>2026-03-01</td><td><span class="badge red">Просрочен</span></td><td>4/5</td><td>22</td><td>165</td><td>—</td><td><span class="badge yellow">Внимание</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-81 Angular Line. Angular 20+</span></td><td><span class="tag">Run</span></td><td>2026-06-30</td><td><span class="badge yellow">В ближ. 3 мес.</span></td><td>4/8</td><td>27</td><td>209</td><td>—</td><td><span class="badge yellow">Внимание</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-76 Новое API RoleApp</span></td><td><span class="tag">Обычный</span></td><td>2026-03-31</td><td><span class="badge red">Просрочен</span></td><td>5/8</td><td>49</td><td>229</td><td>—</td><td><span class="badge red">Просрочен</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-74 Написание тестов Zoya</span></td><td><span class="tag">Ключевой</span></td><td>2026-05-31</td><td><span class="badge red">Просрочен</span></td><td>2/8</td><td>53</td><td>840</td><td>—</td><td><span class="badge red">⚠ Блокер</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-69 Angular Line. Миграция taiga-4</span></td><td><span class="tag">Run</span></td><td>2026-03-31</td><td><span class="badge red">Просрочен</span></td><td>2/5</td><td>24</td><td>288</td><td>—</td><td><span class="badge red">Просрочен</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-66 Безопасное развёрт. МС услуг</span></td><td><span class="tag">Обычный</span></td><td>2026-03-31</td><td><span class="badge red">Просрочен</span></td><td>0/1</td><td>2</td><td>24</td><td>—</td><td><span class="badge yellow">Внимание</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-65 Трейсинг backend</span></td><td><span class="tag">Ключевой</span></td><td>2026-05-31</td><td><span class="badge red">Просрочен</span></td><td>1/6</td><td>80</td><td>610</td><td>—</td><td><span class="badge red">⚠ Блокер</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-62 Java Line. Liquibase (Flyway)</span></td><td><span class="tag">Run</span></td><td>2026-03-01</td><td><span class="badge red">Просрочен</span></td><td>0/4</td><td>8</td><td>25</td><td>—</td><td><span class="badge yellow">Внимание</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-58 ОКИИ Прометей</span></td><td><span class="tag">Обычный</span></td><td>2027-06-30</td><td><span class="badge blue">В работе</span></td><td>3/3</td><td>3</td><td>125</td><td>—</td><td><span class="badge green">Норма</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-57 Java Line. Spring Boot</span></td><td><span class="tag">Обычный</span></td><td>2026-03-01</td><td><span class="badge red">Просрочен</span></td><td>3/5</td><td>21</td><td>280</td><td>—</td><td><span class="badge red">Просрочен</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-50 Scala Line. Cats-Effect/ZIO</span></td><td><span class="tag">Обычный</span></td><td>2025-12-31</td><td><span class="badge red">Просрочен</span></td><td>0/5</td><td>12</td><td>57</td><td>—</td><td><span class="badge red">Просрочен</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-33 Заезд в Interspace [ТОП ЦД]</span></td><td><span class="tag">Ключевой</span></td><td>—</td><td><span class="badge gray">В работе</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="badge yellow">Внимание</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-21 Отказ от Akka</span></td><td><span class="tag">Миграция</span></td><td>—</td><td><span class="badge gray">В работе</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="badge green">Норма</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-116 AdopShot DistributionSDK</span></td><td><span class="tag">Run</span></td><td>—</td><td><span class="badge gray">В работе</span></td><td>—</td><td>—</td><td>18</td><td>100%</td><td><span class="badge red">⚠ WIP 100%</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-40 Раскрытие платёжных методов</span></td><td><span class="tag">Обычный</span></td><td>2026-01-30</td><td><span class="badge red">Просрочен</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="badge red">Просрочен</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ OVERDUE VIEW ══════════ -->
+    <div class="view-panel" id="panel-overdue">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="font-size:15px;font-weight:700;">🔴 Просроченные проекты</div>
+        <span id="overdue-role-badge" class="role-badge pm">👤 Менеджер проекта</span>
+      </div>
+      <div style="background:var(--red-bg);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#fc8181;">
+        ⚠️ Проекты, у которых <strong>Due Date PROJECT прошёл</strong>, но статус ≠ Done. Данные из Jira через PDR-автоматизацию.
+      </div>
+      <div class="kpi-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px;">
+        <div class="kpi-card red"><div class="kpi-label">Просрочено проектов</div><div class="kpi-val">16</div><div class="kpi-sub">из 38 In Progress</div></div>
+        <div class="kpi-card red"><div class="kpi-label">Среднее отставание</div><div class="kpi-val">−47д</div><div class="kpi-sub">Target End − Due Date</div></div>
+        <div class="kpi-card yellow"><div class="kpi-label">Максимальное</div><div class="kpi-val">−114д</div><div class="kpi-sub">SMEIT-57 Spring Boot</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Просроченные — детали</span></div>
+        <div class="card-body table-wrap">
+          <table><thead><tr><th>Проект</th><th>Менеджер</th><th>Due Date</th><th>Отставание</th><th>Незавершённых ИВК</th><th>Блокеры</th><th>Следующий шаг</th></tr></thead>
+          <tbody>
+            <tr><td><span class="project-link">SMEIT-57 Spring Boot</span></td><td>А. Иванова</td><td style="color:var(--red)">2026-03-01</td><td><span class="badge red">−114д</span></td><td>2 / 5</td><td><span class="badge gray">0</span></td><td><span class="tag">Пересогласовать дедлайн</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-50 Cats-Effect/ZIO</span></td><td>А. Иванова</td><td style="color:var(--red)">2025-12-31</td><td><span class="badge red">−174д</span></td><td>0 / 5</td><td><span class="badge gray">0</span></td><td><span class="tag">Эскалация</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-76 Новое API RoleApp</span></td><td>—</td><td style="color:var(--red)">2026-03-31</td><td><span class="badge red">−84д</span></td><td>3 / 8</td><td><span class="badge yellow">1</span></td><td><span class="tag">Снять блокер</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-69 Angular taiga-4</span></td><td>—</td><td style="color:var(--red)">2026-03-31</td><td><span class="badge red">−84д</span></td><td>3 / 5</td><td><span class="badge gray">0</span></td><td><span class="tag">Ускорить команду</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-66 Безоп. развёрт. МС</span></td><td>—</td><td style="color:var(--red)">2026-03-31</td><td><span class="badge red">−84д</span></td><td>1 / 1</td><td><span class="badge gray">0</span></td><td><span class="tag">Проверить статус</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-65 Трейсинг backend</span></td><td>—</td><td style="color:var(--red)">2026-05-31</td><td><span class="badge red">−23д</span></td><td>5 / 6</td><td><span class="badge red">2</span></td><td><span class="tag">Снять блокеры</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-74 Zoya тесты</span></td><td>А. Иванова</td><td style="color:var(--red)">2026-05-31</td><td><span class="badge red">−23д</span></td><td>6 / 8</td><td><span class="badge red">1</span></td><td><span class="tag">Снять блокер</span></td></tr>
+            <tr><td><span class="project-link">SMEIT-97 iOS SMEUIKit</span></td><td>—</td><td style="color:var(--red)">2026-05-31</td><td><span class="badge red">−23д</span></td><td>2 / 5</td><td><span class="badge red">1</span></td><td><span class="tag">Снять блокер</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ BLOCKERS VIEW ══════════ -->
+    <div class="view-panel" id="panel-blockers">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="font-size:15px;font-weight:700;">⛔ Активные блокеры</div>
+        <span id="blockers-role-badge" class="role-badge pm">👤 Менеджер проекта</span>
+      </div>
+      <div style="background:var(--yellow-bg);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#fbbf24;">
+        🔗 Задачи ИВК с типом связи <strong>is blocked by</strong> (не снятые). Автоматически появляются при простановке связи в Jira.
+      </div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+        <div class="kpi-card yellow"><div class="kpi-label">Активных блокеров</div><div class="kpi-val">7</div><div class="kpi-sub">открытых сейчас</div></div>
+        <div class="kpi-card red"><div class="kpi-label">Хронических</div><div class="kpi-val">3</div><div class="kpi-sub">&gt;14 дней</div></div>
+        <div class="kpi-card yellow"><div class="kpi-label">Срочных</div><div class="kpi-val">4</div><div class="kpi-sub">1–14 дней</div></div>
+        <div class="kpi-card neutral"><div class="kpi-label">Кросс-командных</div><div class="kpi-val">5</div><div class="kpi-sub">из 7</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Блокеры — список</span></div>
+          <div class="card-body">
+            <div class="blocker-item">
+              <div class="blocker-icon red">🔒</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">SCU-756 Заезд в Interscape</div>
+                <div class="blocker-sub">SMEIT-33 · PKO Card — is blocked by: B2B-крит зависимость</div>
+                <div style="margin-top:3px;"><span class="badge red">Просрочен</span> <span class="tag">Менеджер: А.Иванова</span></div>
+              </div>
+              <div style="text-align:right;"><div class="blocker-days red">21 дн.</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">с 02.06</div></div>
+            </div>
+            <div class="blocker-item">
+              <div class="blocker-icon red">🔒</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">CL-1017 Spring-tracing адаптер</div>
+                <div class="blocker-sub">SMEIT-65 · B2G Кредитные — is blocked by: инфра команда</div>
+                <div style="margin-top:3px;"><span class="badge red">Просрочен</span></div>
+              </div>
+              <div style="text-align:right;"><div class="blocker-days red">14 дн.</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">с 09.06</div></div>
+            </div>
+            <div class="blocker-item">
+              <div class="blocker-icon red">🔒</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">SMECARD-7378 AdopShot</div>
+                <div class="blocker-sub">SMEIT-116 · PKO Card — is blocked by: DistributionSDK</div>
+              </div>
+              <div style="text-align:right;"><div class="blocker-days red">18 дн.</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">с 05.06</div></div>
+            </div>
+            <div class="blocker-item">
+              <div class="blocker-icon yellow">⚠️</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">SCU-785 Написание тестов</div>
+                <div class="blocker-sub">SMEIT-74 · Kredline — is blocked by: Zoya-зависимость</div>
+              </div>
+              <div style="text-align:right;"><div class="blocker-days yellow">6 дн.</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">с 17.06</div></div>
+            </div>
+            <div class="blocker-item">
+              <div class="blocker-icon yellow">⚠️</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">BCC-61 Loan accounts Interspace</div>
+                <div class="blocker-sub">SMEIT-33 · B2B Кред. карты — is blocked by: веб команда</div>
+              </div>
+              <div style="text-align:right;"><div class="blocker-days yellow">4 дн.</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">с 19.06</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Длительность блокеров — распределение</span></div>
+          <div class="card-body">
+            <div class="legend-row">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>&gt;14д — хронические</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div>1–14д — срочные</div>
+            </div>
+            <div class="delta-row"><span class="delta-label">SMECARD-7378</span><div class="delta-track"><div class="delta-bar red" style="width:86%">18д</div></div><span class="delta-val red">18д</span></div>
+            <div class="delta-row"><span class="delta-label">SCU-756 Interspace</span><div class="delta-track"><div class="delta-bar red" style="width:100%">21д</div></div><span class="delta-val red">21д</span></div>
+            <div class="delta-row"><span class="delta-label">CL-1017 Spring</span><div class="delta-track"><div class="delta-bar red" style="width:67%">14д</div></div><span class="delta-val red">14д</span></div>
+            <div class="delta-row"><span class="delta-label">SCU-785 Zoya</span><div class="delta-track"><div class="delta-bar yellow" style="width:29%">6д</div></div><span class="delta-val yellow">6д</span></div>
+            <div class="delta-row"><span class="delta-label">BCC-61 Loan</span><div class="delta-track"><div class="delta-bar yellow" style="width:19%">4д</div></div><span class="delta-val yellow">4д</span></div>
+            <div style="margin-top:12px;padding:10px;background:var(--red-bg);border-radius:6px;font-size:11.5px;color:#fc8181;">
+              🔔 SLA-алерт: 3 блокера &gt;14 дней → эскалация на Менеджеров проекта и ПО
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ RISK VIEW ══════════ -->
+    <div class="view-panel" id="panel-risk">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="font-size:15px;font-weight:700;">⚡ Риск срыва</div>
+        <span id="risk-role-badge" class="role-badge pm">👤 Менеджер проекта</span>
+      </div>
+      <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#fc8181;">
+        ⚡ Проекты с комбинацией факторов: <strong>активный блокер + отставание &gt; 7 дней + WIP &gt; 80%</strong>. Высокая вероятность срыва дедлайна.
+      </div>
+      <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+        <div class="kpi-card red"><div class="kpi-label">Критических</div><div class="kpi-val">4</div><div class="kpi-sub">требуют эскалации</div></div>
+        <div class="kpi-card yellow"><div class="kpi-label">Под наблюдением</div><div class="kpi-val">6</div><div class="kpi-sub">1 фактор риска</div></div>
+        <div class="kpi-card neutral"><div class="kpi-label">WIP &gt; 80%</div><div class="kpi-val">5</div><div class="kpi-sub">команд перегружены</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Без рисков</div><div class="kpi-val">28</div><div class="kpi-sub">норм. по всем метрикам</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Риск-матрица (Вероятность × Влияние)</span></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:28px 1fr 1fr 1fr;grid-template-rows:auto auto auto auto;gap:4px;">
+              <div style="font-size:10px;color:var(--text3);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;grid-row:span 3;">Вероятность</div>
+              <div class="rm-cell hh" style="padding:6px;font-size:11px;"><div>SMEIT-116<br><span style="font-size:10px;opacity:0.8">WIP 100%+блокер</span></div></div>
+              <div class="rm-cell hm" style="padding:6px;font-size:11px;"><div>SMEIT-65<br><span style="font-size:10px;opacity:0.8">Блокер 14д</span></div></div>
+              <div class="rm-cell hm" style="padding:6px;font-size:11px;"><div>SMEIT-76<br><span style="font-size:10px;opacity:0.8">−84д + блокер</span></div></div>
+              <div class="rm-cell mh" style="padding:6px;font-size:11px;"><div>SMEIT-74<br><span style="font-size:10px;opacity:0.8">Блокер + −23д</span></div></div>
+              <div class="rm-cell mm" style="padding:6px;font-size:11px;"><div>SMEIT-97<br><span style="font-size:10px;opacity:0.8">−23д</span></div></div>
+              <div class="rm-cell ml" style="padding:6px;font-size:11px;"><div>SMEIT-81<br><span style="font-size:10px;opacity:0.8">Дедлайн близко</span></div></div>
+              <div class="rm-cell lm" style="padding:6px;font-size:11px;"><div>SMEIT-58<br><span style="font-size:10px;opacity:0.8">Долгий проект</span></div></div>
+              <div class="rm-cell ll" style="padding:6px;font-size:11px;"></div>
+              <div class="rm-cell ll" style="padding:6px;font-size:11px;"></div>
+              <div></div>
+              <div style="font-size:10px;color:var(--text3);text-align:center;">Низкое</div>
+              <div style="font-size:10px;color:var(--text3);text-align:center;">Среднее</div>
+              <div style="font-size:10px;color:var(--text3);text-align:center;">Высокое влияние</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Критические проекты — детали</span></div>
+          <div class="card-body">
+            <div class="blocker-item">
+              <div class="blocker-icon red" style="width:32px;height:32px;font-size:14px;">🔴</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">SMEIT-116 AdopShot</div>
+                <div class="blocker-sub">WIP 100% · Блокер 18 дней · Команда PKO Card</div>
+                <div style="margin-top:4px;"><span class="badge red">Эскалация требуется</span></div>
+              </div>
+            </div>
+            <div class="blocker-item">
+              <div class="blocker-icon red" style="width:32px;height:32px;font-size:14px;">🔴</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">SMEIT-65 Трейсинг backend</div>
+                <div class="blocker-sub">Просрочен −23д · Блокер 14 дней · B2G Кредитные</div>
+                <div style="margin-top:4px;"><span class="badge red">Снять блокер</span></div>
+              </div>
+            </div>
+            <div class="blocker-item">
+              <div class="blocker-icon red" style="width:32px;height:32px;font-size:14px;">🔴</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">SMEIT-76 Новое API RoleApp</div>
+                <div class="blocker-sub">Просрочен −84д · Блокер 4 дня · Фин. продукты</div>
+                <div style="margin-top:4px;"><span class="badge red">Пересмотр плана</span></div>
+              </div>
+            </div>
+            <div class="blocker-item">
+              <div class="blocker-icon yellow" style="width:32px;height:32px;font-size:14px;">⚡</div>
+              <div class="blocker-meta">
+                <div class="blocker-name">SMEIT-74 Zoya тесты</div>
+                <div class="blocker-sub">Просрочен −23д · Блокер 6 дней · WIP 89%</div>
+                <div style="margin-top:4px;"><span class="badge yellow">Под наблюдением</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content-area -->
+</div><!-- end main -->
+</div><!-- end shell -->
+
+<script>
+function setNavActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+function setTabActive(el, panel) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + panel).classList.add('active');
+}
+
+const roleLabels = {
+  pm:   { text: '👤 Менеджер проекта', cls: 'pm' },
+  lead: { text: '📋 Лид проектного офиса', cls: 'lead' },
+  tl:   { text: '🛠️ Тимлид / Групплид', cls: 'tl' },
+  cto:  { text: '📊 СТО / Ответственный', cls: 'cto' }
+};
+
+function setRole(role) {
+  // Home panel sub-views
+  ['home-pm','home-lead','home-tl','home-cto'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  const homeMap = { pm:'home-pm', lead:'home-lead', tl:'home-tl', cto:'home-cto' };
+  document.getElementById(homeMap[role]).style.display = 'block';
+
+  // Update role badges on all panels
+  const { text, cls } = roleLabels[role];
+  ['all-role-badge','overdue-role-badge','blockers-role-badge','risk-role-badge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = text;
+      el.className = 'role-badge ' + cls;
+    }
+  });
+}
+// init
+setRole('pm');
+</script>
+</body>
+</html>
